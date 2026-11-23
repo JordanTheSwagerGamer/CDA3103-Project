@@ -15,16 +15,38 @@ int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
     // 1. Fetch the instruction addressed by PC from Mem and write it to instruction.
     // 2. Return 1 if a halt condition occurs; otherwise, return 0.
 
-    // Halt condition
+    // Halt condition: Address must be a multiple of 4 per the rules of MIPS. (32 bits AKA 4 bytes)
    if (PC % 4 != 0) return 1;
 
+   // Else we need to grab the starting point of the PC address to make sure we are copying the right thing.
+   // Each Mem[i] holds 4 bytes, thus to make sure we obtain the full package we divide by 4.
+   // Recall that to divide by 4 we can do >> 2.
+   // We use the available macro given in spimcore.h
+  
+   *instruction =  MEM(PC);
+   return 0;
 }
-
 
 /* instruction partition */
 /* 10 Points */
 void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsigned *r2, unsigned *r3, unsigned *funct, unsigned *offset, unsigned *jsec)
-{
+{   
+    // To obtain a specific portion of an instruction we must isolate the bits that we want.
+    // 1. Shift right by the "lower bound" to ensure our instruction starts from 0.
+    // 2. Mask (AKA only include) the specified bit ammount by using & (AND).
+       // For 5 bits do : & 31 (1 1111)
+       // For 6 bits do:  & 63 (11 1111)
+       // For 16 bits do: & 0xFFFF (1111 1111 1111 1111)
+       // For 26 bits do: & 3FFFFFF (11 1111 1111 1111 1111 1111 1111)
+    // Note that we might not need to shift for some cases.
+
+    *op = (instruction >> 26) & 63;
+    *r1 = (instruction >> 21) & 31;
+    *r2 = (instruction >> 16) & 31;
+    *r3 = (instruction >> 11) & 31;
+    *funct = instruction & 63;
+    *offset = instruction & 0xFFFF;
+    *jsec = instruction & 0x3FFFFFF;
 
 }
 
