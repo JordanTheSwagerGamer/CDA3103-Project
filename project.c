@@ -54,8 +54,142 @@ void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsi
 
 /* instruction decode */
 /* 15 Points */
-int instruction_decode(unsigned op,struct_controls *controls)
+int instruction_decode(unsigned op, struct_controls *controls)
 {
+    switch (op)
+    {
+        case(0): // r-type instruction (000000)
+        {
+            controls->RegDst = 1;
+            controls->Jump = 0;
+            controls->Branch = 0;
+            controls->MemRead = 0;
+            controls->ALUOp = 7;
+            controls->MemWrite = 0;
+            controls->MemtoReg = 0;
+            controls->ALUSrc = 0;
+            controls->RegWrite = 1;
+            break;
+        }
+        case(2): // j (000010)
+        {
+            controls->RegDst = 2;
+            controls->Jump = 1;
+            controls->Branch = 0;
+            controls->MemRead = 0;
+            controls->ALUOp = 0;
+            controls->MemWrite = 0;
+            controls->MemtoReg = 2;
+            controls->ALUSrc = 1;
+            controls->RegWrite = 0;
+
+            break;
+        }
+        case(4): // beq (000100)
+        {
+            controls->RegDst = 2;
+            controls->Jump = 0;
+            controls->Branch = 1;
+            controls->MemRead = 0;
+            controls->ALUOp = 1; // Subtraction
+            controls->MemWrite = 0;
+            controls->MemtoReg = 2;
+            controls->ALUSrc = 0;
+            controls->RegWrite = 0;
+
+            break;
+        }
+        case(8): // addi (001000)
+        {
+            controls->RegDst = 0;
+            controls->Jump = 0;
+            controls->Branch = 0;
+            controls->MemRead = 0;
+            controls->ALUOp = 0; // Addition
+            controls->MemWrite = 0;
+            controls->MemtoReg = 0;
+            controls->ALUSrc = 1;
+            controls->RegWrite = 1;
+
+            break;
+        }
+        case(10): //slti (001010)
+        {
+            controls->RegDst = 0;
+            controls->Jump = 0;
+            controls->Branch = 0;
+            controls->MemRead = 0;
+            controls->ALUOp = 2; // Signed Less than
+            controls->MemWrite = 0;
+            controls->MemtoReg = 0;
+            controls->ALUSrc = 1;
+            controls->RegWrite = 1;
+
+            break;
+        }
+        case(11): // sltiu (001011)
+        {  
+            controls->RegDst = 0;
+            controls->Jump = 0;
+            controls->Branch = 0;
+            controls->MemRead = 0;
+            controls->ALUOp = 3; // Unisgned less than
+            controls->MemWrite = 0;
+            controls->MemtoReg = 0;
+            controls->ALUSrc = 1;
+            controls->RegWrite = 1;
+
+            break;
+        }
+        case (15): // lui (001111)
+        {
+            controls->RegDst = 0;
+            controls->Jump = 0;
+            controls->Branch = 0;
+            controls->MemRead = 0;
+            controls->ALUOp = 6; // << 16.
+            controls->MemWrite = 0;
+            controls->MemtoReg = 0;
+            controls->ALUSrc = 1;
+            controls->RegWrite = 1;
+
+            break;
+        }
+        case (35): // lw (100011)
+        {
+            controls->RegDst = 0;
+            controls->Jump = 0;
+            controls->Branch = 0;
+            controls->MemRead = 1;
+            controls->ALUOp = 0; // Unsure...
+            controls->MemWrite = 0;
+            controls->MemtoReg = 1;
+            controls->ALUSrc = 1;
+            controls->RegWrite = 1;
+
+            break;
+        }
+        case (43): // sw (101011)
+        {
+            controls->RegDst = 2; 
+            controls->Jump = 0;
+            controls->Branch = 0;
+            controls->MemRead = 0;
+            controls->ALUOp = 0; // Unsure...
+            controls->MemWrite = 1;
+            controls->MemtoReg = 2;
+            controls->ALUSrc = 1;
+            controls->RegWrite = 0;
+
+            break;
+        }
+        default:
+        {
+            return 1; // Fail
+        }
+
+    }
+    return 0; // Success
 
 }
 
