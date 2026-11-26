@@ -197,14 +197,37 @@ int instruction_decode(unsigned op, struct_controls *controls)
 /* 5 Points */
 void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigned *data2)
 {
-
+    // Simple copy over
+    *data1 = Reg[r1];
+    *data2 = Reg[r2];
 }
 
 
 /* Sign Extend */
 /* 10 Points */
 void sign_extend(unsigned offset,unsigned *extended_value)
-{
+{   
+    // Shift the 15th bit from the offset and isolate it.
+
+    // i.e Let's say we have 
+    // 111 1011 1001 1111
+    // We shift >> 15.
+    // 000 0000 0000 0001
+    // Then we isolate by masking with 1 (01).
+    // This should give us the bit by itself in this case it's 1
+
+    int result = (offset >> 15) & 1
+
+    // We must perform a sign extent if and only if the most significant bit is 1. (Meaning negative)
+    if (result == 1)
+    {
+        *extended_value = offset | (0xFFFF0000); // Perform a bitwise OR to force the upper 16 bits (0xFFFF0000) to be 1's 
+        // This helps retain the original value but just extends it to be 32 bits long. 
+
+    }else // Else we just leave the upper bits as they are (AKA) as 0's
+    {
+        *extended_value = offset;
+    }
 
 }
 
