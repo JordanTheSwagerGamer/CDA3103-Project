@@ -216,7 +216,7 @@ void sign_extend(unsigned offset,unsigned *extended_value)
     // Then we isolate by masking with 1 (01).
     // This should give us the bit by itself in this case it's 1
 
-    int result = (offset >> 15) & 1
+    int result = (offset >> 15) & 1;
 
     // We must perform a sign extent if and only if the most significant bit is 1. (Meaning negative)
     if (result == 1)
