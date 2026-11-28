@@ -226,7 +226,7 @@ void sign_extend(unsigned offset,unsigned *extended_value)
 
     }else // Else we just leave the upper bits as they are (AKA) as 0's
     {
-        *extended_value = offset;
+        *extended_value = offset & (0x0000FFFF); // Forces upper bits to be 0 with a binary op AND.
     }
 
 }
